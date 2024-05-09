@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:chat_is_this_real_app/themes/light_mode.dart';
-import 'pages/register_page.dart';
+import 'auth/login_or_register.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chat, is this Real?',
       theme: lightMode,
-      home: RegisterPage(),
+      home: LoginOrRegister(),
     );
   }
 }
