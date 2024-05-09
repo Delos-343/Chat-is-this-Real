@@ -22,7 +22,7 @@ class LoginPage extends StatelessWidget {
           children: [
             // Login
             Icon(
-              Icons.message,
+              Icons.blur_on_outlined,
               size: 60,
               color: Theme.of(context).colorScheme.primary,
             ),
@@ -31,7 +31,7 @@ class LoginPage extends StatelessWidget {
       
             // Welcome Back Msg
             Text(
-              'Welcome back, broski!',
+              'Welcome back, user.',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: 16,
