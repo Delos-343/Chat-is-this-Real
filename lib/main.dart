@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chat, is this Real?',
       theme: lightMode,
-      home: LoginOrRegister(),
+      home: const LoginOrRegister(),
     );
   }
 }
