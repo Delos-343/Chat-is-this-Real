@@ -3,7 +3,6 @@ import 'package:chat_is_this_real_app/components/my_textfield.dart';
 import 'package:chat_is_this_real_app/components/my_button.dart';
 
 class LoginPage extends StatelessWidget {
-
   // Email + Password Controllers
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
@@ -15,7 +14,7 @@ class LoginPage extends StatelessWidget {
     required this.onTap,
   });
 
-  void login(){}
+  void login() {}
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +32,18 @@ class LoginPage extends StatelessWidget {
             ),
 
             const SizedBox(height: 50),
-      
+
             // Welcome Back Msg
             Text(
               'Welcome back, user.',
               style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.inversePrimary,
                 fontSize: 16,
               ),
             ),
 
             const SizedBox(height: 25),
-      
+
             // Email
             MyTextField(
               hintText: "Email",
@@ -53,7 +52,7 @@ class LoginPage extends StatelessWidget {
             ),
 
             const SizedBox(height: 10),
-      
+
             // Password
             MyTextField(
               hintText: "Password",
@@ -62,7 +61,7 @@ class LoginPage extends StatelessWidget {
             ),
 
             const SizedBox(height: 25),
-      
+
             // Login Btn
             MyButton(
               text: "Log in",
@@ -70,25 +69,23 @@ class LoginPage extends StatelessWidget {
             ),
 
             const SizedBox(height: 25),
-          
+
             // Register
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "Not a member? ",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary
-                  ),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary),
                 ),
                 GestureDetector(
                   onTap: onTap,
                   child: Text(
                     "Register now.",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary
-                    ),
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.inversePrimary),
                   ),
                 ),
               ],
