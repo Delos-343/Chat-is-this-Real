@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,9 +28,15 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -39,16 +48,6 @@ class DefaultFirebaseOptions {
         );
     }
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDlp2TSV5SXlSeYZJBaU99ZG8IXwScrtE4',
-    appId: '1:870779011541:web:22d1ee45de313b52eb3d5c',
-    messagingSenderId: '870779011541',
-    projectId: 'chat-is-this-real',
-    authDomain: 'chat-is-this-real.firebaseapp.com',
-    storageBucket: 'chat-is-this-real.appspot.com',
-    measurementId: 'G-XGV89LYZ0M',
-  );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBoYhJNeP3RkZyKUDsel5HVGSySvTvE0aI',
@@ -65,24 +64,5 @@ class DefaultFirebaseOptions {
     projectId: 'chat-is-this-real',
     storageBucket: 'chat-is-this-real.appspot.com',
     iosBundleId: 'com.example.chatIsThisRealApp',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBuEiv_COLN4ip-nNmNGKlsiZDLvXGToBQ',
-    appId: '1:870779011541:ios:3021c7ef7f3ccc43eb3d5c',
-    messagingSenderId: '870779011541',
-    projectId: 'chat-is-this-real',
-    storageBucket: 'chat-is-this-real.appspot.com',
-    iosBundleId: 'com.example.chatIsThisRealApp',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDlp2TSV5SXlSeYZJBaU99ZG8IXwScrtE4',
-    appId: '1:870779011541:web:975ad85542295b91eb3d5c',
-    messagingSenderId: '870779011541',
-    projectId: 'chat-is-this-real',
-    authDomain: 'chat-is-this-real.firebaseapp.com',
-    storageBucket: 'chat-is-this-real.appspot.com',
-    measurementId: 'G-S2KEJXNFR8',
   );
 }
