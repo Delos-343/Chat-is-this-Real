@@ -1,3 +1,4 @@
+import 'package:chat_is_this_real_app/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_is_this_real_app/components/my_textfield.dart';
 import 'package:chat_is_this_real_app/components/my_button.dart';
@@ -14,7 +15,30 @@ class RegisterPage extends StatelessWidget {
     required this.onTap,
   });
 
-  void register() {}
+  void register(BuildContext context) {
+    // get auth service for registration
+    final _auth = AuthService();
+
+    // password == user ? create user : catch error
+    if (_pwController.text == _confirmPwController.text) {
+      try {
+        _auth.signUpWithEmailPassword(
+            _emailController.text, _pwController.text);
+      } catch (e) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text(e.toString()),
+                ));
+      }
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => const AlertDialog(
+                title: Text("Your password does not match."),
+              ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +95,10 @@ class RegisterPage extends StatelessWidget {
 
             const SizedBox(height: 25),
 
-            // Login Btn
+            // Register Btn
             MyButton(
               text: "Register",
-              onTap: register,
+              onTap: () => register(context),
             ),
 
             const SizedBox(height: 25),
