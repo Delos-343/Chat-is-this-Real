@@ -1,8 +1,8 @@
+import 'package:chat_is_this_real_app/auth/auth_gate.dart';
 import 'package:chat_is_this_real_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'themes/light_mode.dart';
-import 'auth/login_or_register.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chat, is this Real?',
       theme: lightMode,
-      home: const LoginOrRegister(),
+      home: const AuthGate(),
     );
   }
 }

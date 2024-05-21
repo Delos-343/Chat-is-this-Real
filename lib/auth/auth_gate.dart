@@ -1,4 +1,5 @@
 import 'package:chat_is_this_real_app/auth/login_or_register.dart';
+import 'package:chat_is_this_real_app/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
