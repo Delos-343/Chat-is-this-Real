@@ -16,7 +16,8 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Center(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Center(
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -24,16 +25,18 @@ class HomePage extends StatelessWidget {
                 "Chat, ",
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  color: Theme.of(context).colorScheme.inversePrimary,
                   fontWeight: FontWeight.w600,
-                  fontSize: 23,
+                  fontSize: 21,
                 ),
               ),
               Text(
-                " is this real ?",
+                " is this (Real) ?",
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w400,
-                  fontSize: 23,
+                  fontSize: 18,
                 ),
               ),
             ],
