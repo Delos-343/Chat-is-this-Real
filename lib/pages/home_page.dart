@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Yippee Ka‐Yay,\nMotherfucker",
+          "Chat,\nis this real?",
           style: TextStyle(
             fontWeight: FontWeight.w300,
           ),
