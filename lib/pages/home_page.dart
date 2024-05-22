@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  // damn this part to hell fr (I took way too long)
+  // damn this to the seven hells fr (way longer than it needed to be)
   void logout() {
     // call auth service for log out
     final _auth = AuthService();
