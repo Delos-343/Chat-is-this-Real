@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
                 " is this real ?",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                   fontSize: 23,
                 ),
               ),
