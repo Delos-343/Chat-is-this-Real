@@ -14,13 +14,18 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Welcome Home"),
+        title: const Text(
+          "Yippee Ka‐Yay,\nMotherfucker",
+          style: TextStyle(
+            fontWeight: FontWeight.w300,
+          ),
+        ),
         actions: [
           // logout btn
-          IconButton(onPressed: logout, icon: Icon(Icons.logout_outlined))
+          IconButton(onPressed: logout, icon: const Icon(Icons.logout_outlined))
         ],
       ),
-      drawer: Drawer(),
+      drawer: const Drawer(),
     );
   }
 }
