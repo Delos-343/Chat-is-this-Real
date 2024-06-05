@@ -11,14 +11,44 @@ class MyDrawer extends StatelessWidget {
         children: [
           // Logo
           DrawerHeader(
-            child: Center(child: Icon(Icons.message)),
-          )
+            child: Center(
+              child: Icon(
+                Icons.message,
+                color: Theme.of(context).colorScheme.primary,
+                size: 40,
+              ),
+            ),
+          ),
 
           // Home
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              title: Text("H o me "),
+              leading: Icon(Icons.home_outlined),
+              onTap: () {},
+            ),
+          ),
 
           // Settings
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              title: Text("S e t t i n g s"),
+              leading: Icon(Icons.settings_outlined),
+              onTap: () {},
+            ),
+          ),
 
           // Logout
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              title: Text("L o g o u t"),
+              leading: Icon(Icons.logout_outlined),
+              onTap: () {},
+            ),
+          ),
         ],
       ),
     );
