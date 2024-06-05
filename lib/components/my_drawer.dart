@@ -1,3 +1,4 @@
+import 'package:chat_is_this_real_app/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {
