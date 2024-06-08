@@ -66,7 +66,8 @@ class HomePage extends StatelessWidget {
           // Return list view
           return ListView(
             children: snapshot.data!
-                .map<Widget>((userData) => _buildUserListItem)
+                .map<Widget>(
+                    (userData) => _buildUserListItem(userData, context))
                 .toList(),
           );
         });
