@@ -1,4 +1,5 @@
 import 'package:chat_is_this_real_app/components/my_drawer.dart';
+import 'package:chat_is_this_real_app/components/user_tile.dart';
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:chat_is_this_real_app/services/chat/chat_service.dart';
 import 'package:flutter/material.dart';
