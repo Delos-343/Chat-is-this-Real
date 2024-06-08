@@ -31,6 +31,13 @@ class ChatService {
   }
 
   // send msg
+  Future<void> sendMessage(String receiverID, message) async {
+    // Get current user info
 
-  // receive msg
+    // Create msg
+
+    // Make a chat room between two users
+  }
+
+  // get msg
 }
