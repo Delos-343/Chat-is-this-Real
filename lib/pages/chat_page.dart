@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatelessWidget {
-  const ChatPage({super.key});
+  final String receiverEmail;
+
+  const ChatPage({
+    super.key,
+    required this.receiverEmail,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(receiverEmail),
+      ),
+    );
   }
 }
