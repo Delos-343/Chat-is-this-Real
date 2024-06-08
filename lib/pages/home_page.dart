@@ -1,8 +1,14 @@
 import 'package:chat_is_this_real_app/components/my_drawer.dart';
+import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
+import 'package:chat_is_this_real_app/services/chat/chat_service.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  // chat + auth services
+  final ChatService _chatService = ChatService();
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +43,36 @@ class HomePage extends StatelessWidget {
         ),
       ),
       drawer: const MyDrawer(),
+      body: _buildUserList(),
     );
+  }
+
+  Widget _buildUserList() {
+    return StreamBuilder(
+        stream: _chatService.getUserStream(),
+        builder: (context, snapshot) {
+          // error
+          if (snapshot.hasError) {
+            return const Text("Error getting users");
+          }
+
+          // Loading
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading...");
+          }
+
+          // Return list view
+          return ListView(
+            children: snapshot.data!
+                .map<Widget>((userData) => _buildUserListItem)
+                .toList(),
+          );
+        });
+  }
+
+  // Display all users except current user
+  Widget _buildUserListItem(
+      Map<String, dynamic> userData, BuildContext context) {
+    return UserTile();
   }
 }
