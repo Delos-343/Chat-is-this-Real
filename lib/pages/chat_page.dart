@@ -47,6 +47,7 @@ class ChatPage extends StatelessWidget {
           ),
 
           // Display user input
+          _buildUserInput(),
         ],
       ),
     );
