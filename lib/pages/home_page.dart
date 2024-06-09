@@ -50,7 +50,8 @@ class HomePage extends StatelessWidget {
           return ListView(
             children: snapshot.data!
                 .map<Widget>(
-                    (userData) => _buildUserListItem(userData, context))
+                  (userData) => _buildUserListItem(userData, context),
+                )
                 .toList(),
           );
         });
@@ -66,13 +67,14 @@ class HomePage extends StatelessWidget {
         onTap: () {
           // Reroute to Chat Page
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatPage(
-                  receiverEmail: userData["email"],
-                  receiverID: userData["uid"],
-                ),
-              ));
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatPage(
+                receiverEmail: userData["email"],
+                receiverID: userData["uid"],
+              ),
+            ),
+          );
         },
       );
     } else {

@@ -24,13 +24,18 @@ class LoginPage extends StatelessWidget {
     // try log in, catch errors
     try {
       await authService.signInWithEmailPassword(
-          _emailController.text, _pwController.text);
+        _emailController.text,
+        _pwController.text,
+      );
     } catch (e) {
       showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text(e.toString()),
-              ));
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(
+            e.toString(),
+          ),
+        ),
+      );
     }
   }
 
@@ -94,16 +99,18 @@ class LoginPage extends StatelessWidget {
               children: [
                 Text(
                   "Not a member? ",
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.primary),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
                 GestureDetector(
                   onTap: onTap,
                   child: Text(
                     "Register now.",
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.inversePrimary),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                    ),
                   ),
                 ),
               ],

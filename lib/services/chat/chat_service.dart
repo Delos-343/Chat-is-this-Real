@@ -23,13 +23,15 @@ class ChatService {
   */
   Stream<List<Map<String, dynamic>>> getUserStream() {
     return _firestore.collection("Users").snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        // for each user
-        final user = doc.data();
+      return snapshot.docs.map(
+        (doc) {
+          // for each user
+          final user = doc.data();
 
-        // get user
-        return user;
-      }).toList();
+          // get user
+          return user;
+        },
+      ).toList();
     });
   }
 
@@ -42,11 +44,12 @@ class ChatService {
 
     // Create new msg
     Message newMessage = Message(
-        senderID: currentUserID,
-        senderEmail: currentUserEmail,
-        receiverID: receiverID,
-        message: message,
-        timestamp: timestamp);
+      senderID: currentUserID,
+      senderEmail: currentUserEmail,
+      receiverID: receiverID,
+      message: message,
+      timestamp: timestamp,
+    );
 
     // Make a chat room between two users
     List<String> ids = [

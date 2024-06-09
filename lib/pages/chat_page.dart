@@ -88,8 +88,11 @@ class ChatPage extends StatelessWidget {
 
         // Return list view
         return ListView(
-          children:
-              snapshot.data!.docs.map((doc) => _buildMessageItem(doc)).toList(),
+          children: snapshot.data!.docs
+              .map(
+                (doc) => _buildMessageItem(doc),
+              )
+              .toList(),
         );
       },
     );

@@ -18,10 +18,10 @@ class UserTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black26,
-              offset: const Offset(
+              offset: Offset(
                 2.0,
                 2.0,
               ),

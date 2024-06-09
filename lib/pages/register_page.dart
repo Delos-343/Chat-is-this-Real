@@ -28,17 +28,19 @@ class RegisterPage extends StatelessWidget {
             _emailController.text, _pwController.text);
       } catch (e) {
         showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text(e.toString()),
-                ));
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(e.toString()),
+          ),
+        );
       }
     } else {
       showDialog(
-          context: context,
-          builder: (context) => const AlertDialog(
-                title: Text("Your password does not match."),
-              ));
+        context: context,
+        builder: (context) => const AlertDialog(
+          title: Text("Your password does not match."),
+        ),
+      );
     }
   }
 
@@ -119,8 +121,9 @@ class RegisterPage extends StatelessWidget {
                   child: Text(
                     "Login now.",
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.inversePrimary),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                    ),
                   ),
                 ),
               ],
