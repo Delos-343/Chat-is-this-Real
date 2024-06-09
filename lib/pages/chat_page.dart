@@ -187,7 +187,7 @@ class _ChatPageState extends State<ChatPage> {
         Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 25.0),
+      padding: const EdgeInsets.symmetric(vertical: 25.0),
       child: Row(
         children: [
           // Textfield
