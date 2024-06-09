@@ -29,6 +29,45 @@ class _ChatPageState extends State<ChatPage> {
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
 
+  // Textfield focus
+  FocusNode myFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Add listener to Focus Node
+    myFocusNode.addListener(
+      () {
+        if (myFocusNode.hasFocus) {
+          // Wait for keyboard; calculate remaining space in chat + scroll down
+          Future.delayed(
+            const Duration(milliseconds: 500),
+            () => scrollDown(),
+          );
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  // Scroll controller
+  final ScrollController _scrollController = ScrollController();
+
+  void scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
   // Send msg
   void sendMessage() async {
     // If input is filled
@@ -96,6 +135,7 @@ class _ChatPageState extends State<ChatPage> {
 
         // Return list view
         return ListView(
+          controller: _scrollController,
           children: snapshot.data!.docs
               .map(
                 (doc) => _buildMessageItem(doc),
