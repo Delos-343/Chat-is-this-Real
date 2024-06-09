@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_is_this_real_app/components/my_textfield.dart';
