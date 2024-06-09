@@ -142,7 +142,7 @@ class ChatPage extends StatelessWidget {
               onPressed: sendMessage,
               icon: const Icon(
                 Icons.arrow_circle_right_outlined,
-                color: Colors.amber,
+                color: Colors.lightBlueAccent,
               ),
             ),
           )
