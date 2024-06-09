@@ -22,17 +22,19 @@ class ChatService {
     ]
   */
   Stream<List<Map<String, dynamic>>> getUserStream() {
-    return _firestore.collection("Users").snapshots().map((snapshot) {
-      return snapshot.docs.map(
-        (doc) {
-          // for each user
-          final user = doc.data();
+    return _firestore.collection("Users").snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map(
+          (doc) {
+            // for each user
+            final user = doc.data();
 
-          // get user
-          return user;
-        },
-      ).toList();
-    });
+            // get user
+            return user;
+          },
+        ).toList();
+      },
+    );
   }
 
   // send msg
