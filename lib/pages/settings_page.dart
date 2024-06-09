@@ -38,7 +38,7 @@ class SettingsPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Dark mode
-            Text("Bravo 6, Goin' Dark"),
+            const Text("Bravo 6, Goin' Dark"),
 
             // Toggle btn
             CupertinoSwitch(
