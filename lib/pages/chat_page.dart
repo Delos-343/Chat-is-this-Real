@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   final String receiverEmail;
   final String receiverID;
 
@@ -17,6 +17,11 @@ class ChatPage extends StatelessWidget {
     required this.receiverID,
   });
 
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
   // Text controller for messages
   final TextEditingController _messageController = TextEditingController();
 
@@ -29,7 +34,8 @@ class ChatPage extends StatelessWidget {
     // If input is filled
     if (_messageController.text.isNotEmpty) {
       // Send msg
-      await _chatService.sendMessage(receiverID, _messageController.text);
+      await _chatService.sendMessage(
+          widget.receiverID, _messageController.text);
 
       // Clear input field after sending
       _messageController.clear();
@@ -45,7 +51,7 @@ class ChatPage extends StatelessWidget {
         child: AppBar(
           centerTitle: true,
           title: Text(
-            receiverEmail,
+            widget.receiverEmail,
             style: const TextStyle(
               fontSize: 15,
             ),
@@ -76,7 +82,7 @@ class ChatPage extends StatelessWidget {
   Widget _buildMessageList() {
     String senderID = _authService.getCurrentUser()!.uid;
     return StreamBuilder(
-      stream: _chatService.getMessages(receiverID, senderID),
+      stream: _chatService.getMessages(widget.receiverID, senderID),
       builder: (context, snapshot) {
         // Error handling
         if (snapshot.hasError) {
