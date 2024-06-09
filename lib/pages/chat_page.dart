@@ -44,6 +44,9 @@ class ChatPage extends StatelessWidget {
             fontSize: 15,
           ),
         ),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.grey.shade700,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 25.0),
