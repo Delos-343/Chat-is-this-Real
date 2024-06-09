@@ -35,6 +35,10 @@ class UserTile extends StatelessWidget {
             // Profile
             const Icon(Icons.person),
 
+            const SizedBox(
+              width: 10,
+            ),
+
             // Username
             Text(text),
           ],
