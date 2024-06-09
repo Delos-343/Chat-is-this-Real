@@ -2,8 +2,10 @@ import 'package:chat_is_this_real_app/components/chat_bubble.dart';
 import 'package:chat_is_this_real_app/components/my_textfield.dart';
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:chat_is_this_real_app/services/chat/chat_service.dart';
+import 'package:chat_is_this_real_app/themes/theme_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatelessWidget {
   final String receiverEmail;
@@ -63,7 +65,7 @@ class ChatPage extends StatelessWidget {
             ),
 
             // Display user input
-            _buildUserInput(),
+            _buildUserInput(context),
           ],
         ),
       ),
@@ -125,7 +127,11 @@ class ChatPage extends StatelessWidget {
   }
 
   // Build msg input
-  Widget _buildUserInput() {
+  Widget _buildUserInput(BuildContext context) {
+    // Light vs Dark : Send Button
+    bool isDarkMode =
+        Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 25.0),
       child: Row(
@@ -148,9 +154,9 @@ class ChatPage extends StatelessWidget {
             margin: const EdgeInsets.only(right: 25),
             child: IconButton(
               onPressed: sendMessage,
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_circle_right_outlined,
-                color: Colors.lightBlueAccent,
+                color: isDarkMode ? Colors.amber : Colors.lightBlueAccent,
               ),
             ),
           )
