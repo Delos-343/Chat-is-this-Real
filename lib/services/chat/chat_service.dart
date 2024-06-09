@@ -1,3 +1,4 @@
+import 'package:chat_is_this_real_app/models/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -40,8 +41,28 @@ class ChatService {
     final Timestamp timestamp = Timestamp.now();
 
     // Create new msg
+    Message newMessage = Message(
+        senderID: currentUserEmail,
+        senderEmail: currentUserID,
+        receiverID: receiverID,
+        message: message,
+        timestamp: timestamp);
 
     // Make a chat room between two users
+    List<String> ids = [
+      currentUserID,
+      receiverID,
+    ];
+    // Sort ID's
+    ids.sort();
+    String chatRoomID = ids.join('_');
+
+    // Add message to db
+    await _firestore
+        .collection("chat_rooms")
+        .doc(chatRoomID)
+        .collection("messages")
+        .add(newMessage.toMap());
   }
 
   // get msg
