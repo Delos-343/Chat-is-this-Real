@@ -22,10 +22,10 @@ class UserTile extends StatelessWidget {
             BoxShadow(
               color: Colors.black26,
               offset: Offset(
-                2.0,
+                1.0,
                 2.0,
               ),
-            )
+            ),
           ],
         ),
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 25),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -15,6 +16,36 @@ class SettingsPage extends StatelessWidget {
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.blueGrey,
           elevation: 0,
+        ),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.secondary,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black26,
+              offset: Offset(
+                1.0,
+                2.0,
+              ),
+            ),
+          ],
+        ),
+        margin: const EdgeInsets.all(25),
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Dark mode
+            Text("Bravo 6, Goin' Dark"),
+
+            // Toggle btn
+            CupertinoSwitch(
+              value: false,
+              onChanged: (value) {},
+            ),
+          ],
         ),
       ),
     );
