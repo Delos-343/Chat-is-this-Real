@@ -38,18 +38,26 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(receiverEmail),
-      ),
-      body: Column(
-        children: [
-          // Display all messages
-          Expanded(
-            child: _buildMessageList(),
+        title: Text(
+          receiverEmail,
+          style: const TextStyle(
+            fontSize: 15,
           ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 25.0),
+        child: Column(
+          children: [
+            // Display all messages
+            Expanded(
+              child: _buildMessageList(),
+            ),
 
-          // Display user input
-          _buildUserInput(),
-        ],
+            // Display user input
+            _buildUserInput(),
+          ],
+        ),
       ),
     );
   }
