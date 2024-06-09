@@ -23,6 +23,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  // Build user list
   Widget _buildUserList() {
     return StreamBuilder(
         stream: _chatService.getUserStream(),
@@ -61,6 +62,7 @@ class HomePage extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => ChatPage(
                   receiverEmail: userData["email"],
+                  receiverID: userData["uid"],
                 ),
               ));
         },
