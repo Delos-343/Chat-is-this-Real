@@ -1,3 +1,4 @@
+import 'package:chat_is_this_real_app/components/my_textfield.dart';
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:chat_is_this_real_app/services/chat/chat_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,5 +82,27 @@ class ChatPage extends StatelessWidget {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     return Text(data["message"]);
+  }
+
+  // Build msg input
+  Widget _buildUserInput() {
+    return Row(
+      children: [
+        // Textfield
+        Expanded(
+          child: MyTextField(
+            controller: _messageController,
+            hintText: "Write something...",
+            obscureText: false,
+          ),
+        ),
+
+        // Send btn
+        IconButton(
+          onPressed: sendMessage,
+          icon: const Icon(Icons.arrow_circle_right_outlined),
+        )
+      ],
+    );
   }
 }
