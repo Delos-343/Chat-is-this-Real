@@ -6,11 +6,15 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings"),
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.blueGrey,
-        elevation: 0,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          centerTitle: true,
+          title: const Text("Settings"),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.blueGrey,
+          elevation: 0,
+        ),
       ),
     );
   }

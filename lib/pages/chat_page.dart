@@ -37,16 +37,20 @@ class ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          receiverEmail,
-          style: const TextStyle(
-            fontSize: 15,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          centerTitle: true,
+          title: Text(
+            receiverEmail,
+            style: const TextStyle(
+              fontSize: 15,
+            ),
           ),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.grey.shade700,
+          elevation: 0,
         ),
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.grey.shade700,
-        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 25.0),

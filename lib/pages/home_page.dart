@@ -15,11 +15,15 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home"),
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.blueGrey,
-        elevation: 0,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          centerTitle: true,
+          title: const Text("Home"),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.blueGrey,
+          elevation: 0,
+        ),
       ),
       drawer: const MyDrawer(),
       body: _buildUserList(),
