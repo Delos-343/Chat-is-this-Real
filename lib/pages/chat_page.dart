@@ -48,6 +48,12 @@ class _ChatPageState extends State<ChatPage> {
         }
       },
     );
+
+    //  Wait for List View + scroll down
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () => scrollDown(),
+    );
   }
 
   @override
@@ -79,6 +85,8 @@ class _ChatPageState extends State<ChatPage> {
       // Clear input field after sending
       _messageController.clear();
     }
+
+    scrollDown();
   }
 
   @override
