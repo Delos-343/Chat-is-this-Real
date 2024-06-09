@@ -16,33 +16,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Chat, ",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 21,
-                ),
-              ),
-              Text(
-                " is this (Real) ?",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 18,
-                ),
-              ),
-            ],
-          ),
-        ),
+        title: const Text("Home"),
       ),
       drawer: const MyDrawer(),
       body: _buildUserList(),
@@ -81,6 +55,7 @@ class HomePage extends StatelessWidget {
       return UserTile(
         text: userData["email"],
         onTap: () {
+          // Reroute to Chat Page
           Navigator.push(
               context,
               MaterialPageRoute(

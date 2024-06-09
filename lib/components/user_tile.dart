@@ -24,7 +24,7 @@ class UserTile extends StatelessWidget {
         child: Row(
           children: [
             // Profile
-            const Icon(Icons.person_2_outlined),
+            const Icon(Icons.person),
 
             // Username
             Text(text),
