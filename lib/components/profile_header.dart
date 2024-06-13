@@ -1,15 +1,16 @@
+import 'package:chat_is_this_real_app/pages/profle_page.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:chat_is_this_real_app/themes/theme_provider.dart';
 
 class ProfileHeader extends StatelessWidget {
-  final VoidCallback onProfilePressed;
-
   const ProfileHeader({
     super.key,
     required this.onProfilePressed,
   });
+
+  final VoidCallback onProfilePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +29,25 @@ class ProfileHeader extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Profile img / btn
           GestureDetector(
-            onTap: onProfilePressed,
+            onTap: () {
+              // Navigate to profile page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const ProfilePage(), // Replace with your profile page widget
+                ),
+              );
+            },
             child: Container(
               decoration: BoxDecoration(
-                  border: Border.all(
-                    color: isDarkMode ? Colors.amber : Colors.lightBlueAccent,
-                    width: 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(50.0)),
+                border: Border.all(
+                  color: isDarkMode ? Colors.amber : Colors.lightBlueAccent,
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(50.0),
+              ),
               child: CircleAvatar(
                 radius: 40, // Increased size for visibility
                 backgroundImage: NetworkImage(profileImageUrl),

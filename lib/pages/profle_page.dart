@@ -5,10 +5,17 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
-        child: child,
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          centerTitle: true,
+          title: const Text("Profile"),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.blueGrey,
+          elevation: 0,
+        ),
       ),
     );
   }
