@@ -1,56 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
+import 'package:provider/provider.dart';
+import 'package:chat_is_this_real_app/themes/theme_provider.dart';
 
 class ProfileHeader extends StatelessWidget {
-  final String email;
-  final String? profileImageUrl;
   final VoidCallback onProfilePressed;
 
   const ProfileHeader({
     super.key,
-    required this.email,
     required this.onProfilePressed,
-    this.profileImageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Row(
-        children: [
-          // Profile img
-          CircleAvatar(
-            radius: 25,
-            backgroundImage: profileImageUrl != null
-                ? NetworkImage(profileImageUrl!)
-                : const AssetImage('assets/default_profile.png')
-                    as ImageProvider,
-            backgroundColor: Colors.transparent,
-          ),
-          const SizedBox(width: 12.0),
+    bool isDarkMode =
+        Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
 
-          // Email
-          Expanded(
-            child: Text(
-              email,
-              style: TextStyle(
-                fontSize: 16.0,
-                color: Theme.of(context).colorScheme.onSurface,
+    final String profileImageUrl = AuthService().getCurrentUser()?.photoURL ??
+        'https://avatars.githubusercontent.com/u/87126965?v=4';
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 15.0),
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Profile img / btn
+          GestureDetector(
+            onTap: onProfilePressed,
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: isDarkMode ? Colors.amber : Colors.lightBlueAccent,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(50.0)),
+              child: CircleAvatar(
+                radius: 40, // Increased size for visibility
+                backgroundImage: NetworkImage(profileImageUrl),
+                backgroundColor: Colors.transparent,
               ),
-              overflow: TextOverflow.ellipsis,
             ),
           ),
-
-          // Profile btn
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            color: Theme.of(context).colorScheme.secondary,
-            onPressed: onProfilePressed,
-          ),
+          const SizedBox(height: 7.0),
         ],
       ),
     );

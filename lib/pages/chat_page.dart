@@ -1,4 +1,5 @@
 import 'package:chat_is_this_real_app/components/message_list.dart';
+import 'package:chat_is_this_real_app/components/profile_header.dart';
 import 'package:chat_is_this_real_app/components/user_input.dart';
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:chat_is_this_real_app/services/chat/chat_service.dart';
@@ -113,9 +114,12 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 25.0),
+        padding: const EdgeInsets.only(top: 7.0),
         child: Column(
           children: [
+            ProfileHeader(
+              onProfilePressed: () {},
+            ),
             Expanded(
               child: MessageList(
                 receiverID: widget.receiverID,
