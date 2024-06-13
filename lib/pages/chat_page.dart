@@ -114,7 +114,7 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 7.0),
+        padding: const EdgeInsets.only(top: 10.0),
         child: Column(
           children: [
             ProfileHeader(
