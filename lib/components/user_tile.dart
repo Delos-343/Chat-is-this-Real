@@ -33,7 +33,7 @@ class UserTile extends StatelessWidget {
         child: Row(
           children: [
             // Profile
-            const Icon(Icons.person),
+            const Icon(Icons.person_2_outlined),
 
             const SizedBox(
               width: 10,
