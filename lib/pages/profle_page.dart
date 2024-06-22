@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:chat_is_this_real_app/components/tabs/feed_view.dart';
 import 'package:chat_is_this_real_app/components/tabs/starred_view.dart';
-import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,6 +11,11 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final AuthService _authService = AuthService();
+  String? _userEmail;
+  String? _userID;
+  bool _isLoading = true;
+
   final List<Widget> tabs = const [
     // Feed
     Tab(
@@ -38,155 +44,93 @@ class _ProfilePageState extends State<ProfilePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _initializeUserDetails();
+  }
+
+  Future<void> _initializeUserDetails() async {
+    try {
+      // Fetch user details from AuthService
+      final user = _authService.getCurrentUser();
+      if (user != null) {
+        setState(() {
+          _userEmail = user.email;
+          _userID = user.uid;
+        });
+      }
+    } catch (e) {
+      // Handle error
+      print('Error fetching user details: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2, // Number of tabs
       child: Scaffold(
-        appBar: AppBar(),
-        body: ListView(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Following
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '1532',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      'Following',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Profile Picture
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blueGrey[100],
-                    ),
-                  ),
-                ),
-
-                // Followers
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '1574',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      'Followers',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: AppBar(
+            centerTitle: true,
+            title: Text(
+              _userEmail ?? 'Profile',
+              style: const TextStyle(
+                fontSize: 15,
+              ),
             ),
-
-            const SizedBox(height: 20),
-
-            // Name
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'ur_username ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 5),
-
-            // Bio
-            Text(
-              'A Flutter Redesign',
-              style: TextStyle(
-                  color: Colors.grey[600], fontWeight: FontWeight.w400),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 5),
-
-            // Link
-            Text(
-              'Connect with Me',
-              style: TextStyle(
-                  color: Colors.blue[500], fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 20),
-
-            // Buttons
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.grey.shade700,
+          ),
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView(
                 children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[400],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Edit Profile',
+                  // Profile Picture
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.blueGrey[100],
+                          ),
                         ),
-                      ),
+
+                        // Email
+                        const SizedBox(height: 20),
+                        Text(
+                          _userEmail ?? 'Loading...',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Contact',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
+
+                  // Tab Bar
+                  TabBar(
+                    tabs: tabs,
+                  ),
+                  SizedBox(
+                    height: 1000,
+                    child: TabBarView(children: tabBarViews),
                   ),
                 ],
               ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Tab Bar
-            TabBar(
-              tabs: tabs,
-            ),
-            SizedBox(
-              height: 1000,
-              child: TabBarView(children: tabBarViews),
-            ),
-          ],
-        ),
       ),
     );
   }
