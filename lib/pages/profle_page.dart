@@ -25,13 +25,13 @@ class _ProfilePageState extends State<ProfilePage> {
   final List<Widget> tabs = const [
     Tab(
       icon: Icon(
-        Icons.image,
+        Icons.image_outlined,
         color: Colors.blueGrey,
       ),
     ),
     Tab(
       icon: Icon(
-        Icons.video_collection,
+        Icons.star_half,
         color: Colors.blueGrey,
       ),
     ),
