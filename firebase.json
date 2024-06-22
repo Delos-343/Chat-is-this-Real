@@ -27,5 +27,8 @@
     "frameworks": {
       "region": "asia-east1"
     }
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }
