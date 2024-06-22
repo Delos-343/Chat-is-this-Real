@@ -48,7 +48,7 @@ class AuthService {
     return null;
   }
 
-  // Sign in
+  // Sign in with email and password
   Future<UserCredential> signInWithEmailPassword(
       String email, String password) async {
     try {
@@ -60,7 +60,7 @@ class AuthService {
     }
   }
 
-  // Sign up
+  // Sign up with email and password
   Future<UserCredential> signUpWithEmailPassword(
       String email, String password) async {
     try {
