@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 // ignore_for_file: unused_field
 
 import 'dart:io';
@@ -76,17 +75,92 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _pickProfileImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      final imageUrl =
-          await _authService.uploadProfileImage(File(pickedFile.path));
-      if (imageUrl != null) {
-        await _authService.saveProfileImageUrl(imageUrl);
-        setState(() {
-          _profileImageUrl = imageUrl;
-        });
+    final ImageSource? source = await showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Image Source'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, ImageSource.gallery),
+            child: const Text(
+              'Gallery',
+              style: TextStyle(color: Colors.green),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, ImageSource.camera),
+            child: const Text(
+              'Camera',
+              style: TextStyle(color: Colors.lightBlue),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (source != null) {
+      if (source == ImageSource.gallery || source == ImageSource.camera) {
+        final pickedFile = await ImagePicker().pickImage(source: source);
+        if (pickedFile != null) {
+          final imageUrl =
+              await _authService.uploadProfileImage(File(pickedFile.path));
+          if (imageUrl != null) {
+            await _authService.saveProfileImageUrl(imageUrl);
+            setState(() {
+              _profileImageUrl = imageUrl;
+            });
+          }
+        }
+      } else {
+        // Enter URL case
+        _showImageUrlDialog();
       }
+    }
+  }
+
+  Future<void> _showImageUrlDialog() async {
+    final TextEditingController urlController = TextEditingController();
+
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Enter Image URL'),
+        content: TextField(
+          controller: urlController,
+          decoration: const InputDecoration(
+            hintText: 'https://example.com/image.jpg',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              String? url = urlController.text.trim();
+              if (url.isNotEmpty) {
+                Navigator.pop(context, url);
+              }
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+
+    if (result != null && result.isNotEmpty) {
+      setState(() {
+        _profileImageUrl = result;
+      });
+      await _authService.saveProfileImageUrl(result);
     }
   }
 
@@ -120,28 +194,50 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        GestureDetector(
-                          onTap: _pickProfileImage,
-                          child: Container(
-                            height: 100,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.blueGrey[100],
-                              image: _profileImageUrl != null
-                                  ? DecorationImage(
-                                      image: NetworkImage(_profileImageUrl!),
-                                      fit: BoxFit.cover,
+                        Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            Container(
+                              height: 100,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.blueGrey[100],
+                                image: _profileImageUrl != null
+                                    ? DecorationImage(
+                                        image: NetworkImage(_profileImageUrl!),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : null,
+                              ),
+                              child: _profileImageUrl == null
+                                  ? const Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
                                     )
                                   : null,
                             ),
-                            child: _profileImageUrl == null
-                                ? const Icon(
-                                    Icons.camera_alt,
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: _pickProfileImage,
+                                child: Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.lightBlue,
+                                  ),
+                                  child: const Icon(
+                                    Icons.add,
                                     color: Colors.white,
-                                  )
-                                : null,
-                          ),
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
 
                         // Email
