@@ -93,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ? const Center(child: CircularProgressIndicator())
             : ListView(
                 children: [
-                  // Profile Picture
+                  // Profile Img
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Column(
