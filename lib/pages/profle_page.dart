@@ -1,9 +1,7 @@
-// ignore_for_file: unused_field
-
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:chat_is_this_real_app/components/tabs/feed_view.dart';
 import 'package:chat_is_this_real_app/components/tabs/starred_view.dart';
@@ -20,18 +18,15 @@ class _ProfilePageState extends State<ProfilePage> {
   String? _userEmail;
   String? _userID;
   bool _isLoading = true;
-  File? _image; // Initialize _image as nullable File
+  File? _image;
 
   final List<Widget> tabs = const [
-    // Feed
     Tab(
       icon: Icon(
         Icons.image,
         color: Colors.blueGrey,
       ),
     ),
-
-    // Starred
     Tab(
       icon: Icon(
         Icons.video_collection,
@@ -40,12 +35,8 @@ class _ProfilePageState extends State<ProfilePage> {
     ),
   ];
 
-  // Tab Bar Views
   final List<Widget> tabBarViews = const [
-    // Feed View
     FeedView(),
-
-    // Starred View
     StarredView(),
   ];
 
@@ -57,21 +48,36 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _initializeUserDetails() async {
     try {
-      // Fetch user details from AuthService
       final user = _authService.getCurrentUser();
       if (user != null) {
         setState(() {
           _userEmail = user.email;
           _userID = user.uid;
         });
+        await _fetchProfileImage();
       }
     } catch (e) {
-      // Handle error
       print('Error fetching user details: $e');
     } finally {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _fetchProfileImage() async {
+    try {
+      final firebase_storage.Reference ref = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('profile_images')
+          .child(_userID! + '.jpg');
+      final downloadUrl = await ref.getDownloadURL();
+      setState(() {
+        _image = File(downloadUrl);
+      });
+    } catch (e) {
+      print('Error fetching profile image: $e');
     }
   }
 
@@ -82,17 +88,53 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           _image = File(pickedFile.path);
         });
-        // Handle image upload or display logic here
+        await _uploadImageToStorage();
       }
     } catch (e) {
       print('Error picking image: $e');
     }
   }
 
+  Future<void> _uploadImageToStorage() async {
+    if (_image == null) return;
+
+    try {
+      final firebase_storage.Reference ref = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('profile_images')
+          .child(_userID! + '.jpg');
+      await ref.putFile(_image!);
+      final imageUrl = await ref.getDownloadURL();
+      print('Uploaded image url: $imageUrl');
+    } catch (e) {
+      print('Error uploading image to Firebase Storage: $e');
+    }
+  }
+
+  Future<void> _removeImageFromStorage() async {
+    if (_image == null) return;
+
+    try {
+      final firebase_storage.Reference ref = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('profile_images')
+          .child(_userID! + '.jpg');
+      await ref.delete();
+      print('Profile image deleted from storage.');
+      setState(() {
+        _image = null;
+      });
+    } catch (e) {
+      print('Error deleting profile image from Firebase Storage: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Number of tabs
+      length: 2,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: PreferredSize(
@@ -113,7 +155,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ? const Center(child: CircularProgressIndicator())
             : ListView(
                 children: [
-                  // Profile Image and Add Photo Button
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Column(
@@ -159,6 +200,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                           Navigator.pop(context);
                                         },
                                       ),
+                                      if (_image != null)
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.delete,
+                                            color: Colors.grey,
+                                          ),
+                                          title: Text('Remove Profile Picture'),
+                                          onTap: () {
+                                            _removeImageFromStorage();
+                                            Navigator.pop(context);
+                                          },
+                                        ),
                                     ],
                                   ),
                                 );
@@ -202,8 +255,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ),
-
-                  // Tab Bar
                   TabBar(
                     tabs: tabs,
                   ),
