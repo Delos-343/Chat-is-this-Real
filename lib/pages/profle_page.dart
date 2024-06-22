@@ -143,7 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     children: <Widget>[
                                       ListTile(
                                         leading: const Icon(
-                                          Icons.photo_library,
+                                          Icons.photo_library_outlined,
                                           color: Colors.green,
                                         ),
                                         title: const Text('Gallery'),
@@ -154,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       ListTile(
                                         leading: const Icon(
-                                          Icons.camera_alt,
+                                          Icons.camera_alt_outlined,
                                           color: Colors.lightBlue,
                                         ),
                                         title: const Text('Camera'),
@@ -165,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       ListTile(
                                         leading: const Icon(
-                                          Icons.cancel,
+                                          Icons.cancel_outlined,
                                           color: Colors.red,
                                         ),
                                         title: const Text('Cancel'),
@@ -176,7 +176,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       if (_imageUrl != null)
                                         ListTile(
                                           leading: const Icon(
-                                            Icons.delete,
+                                            Icons.delete_outline,
                                             color: Colors.grey,
                                           ),
                                           title: const Text(
