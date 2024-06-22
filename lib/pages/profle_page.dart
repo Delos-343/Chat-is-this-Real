@@ -1,3 +1,5 @@
+import 'package:chat_is_this_real_app/components/tabs/feed_view.dart';
+import 'package:chat_is_this_real_app/components/tabs/starred_view.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
