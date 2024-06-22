@@ -1,4 +1,7 @@
+// ignore_for_file: unused_field, unused_import
+
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
@@ -17,40 +20,41 @@ class ProfileService {
       final downloadUrl = await ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
-      print('Error fetching profile image url: $e');
+      print('Error fetching profile img: $e');
       return null;
     }
   }
 
-  Future<void> saveProfileImageUrl(String userId, String url) async {
+  Future<void> uploadProfileImage(File imageFile, String userId) async {
     try {
-      await _authService.saveProfileImageUrl(url);
-      final user = _auth.currentUser;
-      if (user != null) {
-        await firebase_storage.FirebaseStorage.instance
-            .ref()
-            .child('profile_images')
-            .child(userId + '.jpg')
-            .putFile(File(url));
-      }
+      final firebase_storage.Reference ref = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('profile_images')
+          .child(userId + '.jpg');
+
+      await ref.putFile(imageFile);
+      final imageUrl = await ref.getDownloadURL();
+      await _authService.saveProfileImageUrl(imageUrl);
+      print('Uploaded img url: $imageUrl');
     } catch (e) {
-      print('Error saving profile image url: $e');
+      print('Error uploading img to Firebase Storage: $e');
     }
   }
 
-  Future<void> deleteProfileImage(String userId) async {
+  Future<void> removeProfileImage(String userId) async {
     try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        await firebase_storage.FirebaseStorage.instance
-            .ref()
-            .child('profile_images')
-            .child(userId + '.jpg')
-            .delete();
-        await _authService.saveProfileImageUrl('');
-      }
+      final firebase_storage.Reference ref = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('profile_images')
+          .child(userId + '.jpg');
+
+      await ref.delete();
+      print('Profile img deleted from storage.');
+      await _authService.saveProfileImageUrl('');
     } catch (e) {
-      print('Error deleting profile image: $e');
+      print('Error deleting profile img from Firebase Storage: $e');
     }
   }
 }
