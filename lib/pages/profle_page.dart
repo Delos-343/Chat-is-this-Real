@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
@@ -18,8 +19,8 @@ class _ProfilePageState extends State<ProfilePage> {
   final AuthService _authService = AuthService();
   String? _userEmail;
   String? _userID;
-  String? _profileImageUrl;
   bool _isLoading = true;
+  File? _image; // Initialize _image as nullable File
 
   final List<Widget> tabs = const [
     // Feed
@@ -44,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // Feed View
     FeedView(),
 
-    // Reels View
+    // Starred View
     StarredView(),
   ];
 
@@ -56,16 +57,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _initializeUserDetails() async {
     try {
+      // Fetch user details from AuthService
       final user = _authService.getCurrentUser();
       if (user != null) {
-        final imageUrl = await _authService.fetchProfileImageUrl();
         setState(() {
           _userEmail = user.email;
           _userID = user.uid;
-          _profileImageUrl = imageUrl;
         });
       }
     } catch (e) {
+      // Handle error
       print('Error fetching user details: $e');
     } finally {
       setState(() {
@@ -74,100 +75,24 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Future<void> _pickProfileImage() async {
-    final ImageSource? source = await showDialog<ImageSource>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Select Image Source'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, ImageSource.gallery),
-            child: const Text(
-              'Gallery',
-              style: TextStyle(color: Colors.green),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, ImageSource.camera),
-            child: const Text(
-              'Camera',
-              style: TextStyle(color: Colors.lightBlue),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    if (source != null) {
-      if (source == ImageSource.gallery || source == ImageSource.camera) {
-        final pickedFile = await ImagePicker().pickImage(source: source);
-        if (pickedFile != null) {
-          final imageUrl =
-              await _authService.uploadProfileImage(File(pickedFile.path));
-          if (imageUrl != null) {
-            await _authService.saveProfileImageUrl(imageUrl);
-            setState(() {
-              _profileImageUrl = imageUrl;
-            });
-          }
-        }
-      } else {
-        // Enter URL case
-        _showImageUrlDialog();
+  Future<void> _getImage(ImageSource source) async {
+    try {
+      final pickedFile = await ImagePicker().pickImage(source: source);
+      if (pickedFile != null) {
+        setState(() {
+          _image = File(pickedFile.path);
+        });
+        // Handle image upload or display logic here
       }
-    }
-  }
-
-  Future<void> _showImageUrlDialog() async {
-    final TextEditingController urlController = TextEditingController();
-
-    final result = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Enter Image URL'),
-        content: TextField(
-          controller: urlController,
-          decoration: const InputDecoration(
-            hintText: 'https://example.com/image.jpg',
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              String? url = urlController.text.trim();
-              if (url.isNotEmpty) {
-                Navigator.pop(context, url);
-              }
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-
-    if (result != null && result.isNotEmpty) {
-      setState(() {
-        _profileImageUrl = result;
-      });
-      await _authService.saveProfileImageUrl(result);
+    } catch (e) {
+      print('Error picking image: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 2, // Number of tabs
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: PreferredSize(
@@ -188,59 +113,84 @@ class _ProfilePageState extends State<ProfilePage> {
             ? const Center(child: CircularProgressIndicator())
             : ListView(
                 children: [
-                  // Profile Image
+                  // Profile Image and Add Photo Button
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            Container(
-                              height: 100,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.blueGrey[100],
-                                image: _profileImageUrl != null
-                                    ? DecorationImage(
-                                        image: NetworkImage(_profileImageUrl!),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : null,
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SafeArea(
+                                  child: Wrap(
+                                    children: <Widget>[
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.photo_library,
+                                          color: Colors.green,
+                                        ),
+                                        title: Text('Gallery'),
+                                        onTap: () {
+                                          _getImage(ImageSource.gallery);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.lightBlue,
+                                        ),
+                                        title: Text('Camera'),
+                                        onTap: () {
+                                          _getImage(ImageSource.camera);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.cancel,
+                                          color: Colors.red,
+                                        ),
+                                        title: Text('Cancel'),
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blueGrey[100],
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2.0,
                               ),
-                              child: _profileImageUrl == null
-                                  ? const Icon(
-                                      Icons.camera_alt,
-                                      color: Colors.white,
+                              image: _image != null
+                                  ? DecorationImage(
+                                      image: FileImage(_image!),
+                                      fit: BoxFit.cover,
                                     )
                                   : null,
                             ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                onTap: _pickProfileImage,
-                                child: Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.lightBlue,
-                                  ),
-                                  child: const Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                            child: _image == null
+                                ? Icon(
+                                    Icons.add_a_photo,
+                                    size: 40,
+                                    color: Colors.grey[800],
+                                  )
+                                : null,
+                          ),
                         ),
-
-                        // Email
                         const SizedBox(height: 20),
                         Text(
                           _userEmail ?? 'Loading...',
