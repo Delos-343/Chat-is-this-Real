@@ -222,7 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       Tab(
                         icon: Icon(
-                          Icons.video_collection_outlined,
+                          Icons.star_half_outlined,
                           color: tabIconColor,
                         ),
                       ),
