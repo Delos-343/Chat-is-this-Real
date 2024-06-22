@@ -8,10 +8,10 @@ import 'package:chat_is_this_real_app/components/tabs/feed_view.dart';
 import 'package:chat_is_this_real_app/components/tabs/starred_view.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -20,9 +20,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String? _userEmail;
   String? _userID;
-  File? _image; // This will hold the profile image file
-
   bool _isLoading = true;
+  File? _image;
+  String? _imageUrl;
 
   final List<Widget> tabs = const [
     Tab(
@@ -78,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
           .child(_userID! + '.jpg');
       final downloadUrl = await ref.getDownloadURL();
       setState(() {
-        _image = File(downloadUrl);
+        _imageUrl = downloadUrl;
       });
     } catch (e) {
       print('Error fetching profile img: $e');
@@ -118,17 +118,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
       await ref.putFile(_image!);
       final imageUrl = await ref.getDownloadURL();
-      print('Uploaded img url: $imageUrl');
-
-      // Update profile image URL in Firestore
+      setState(() {
+        _imageUrl = imageUrl;
+      });
       await _authService.saveProfileImageUrl(imageUrl);
+      print('Uploaded img url: $imageUrl');
     } catch (e) {
       print('Error uploading img to Firebase Storage: $e');
     }
   }
 
   Future<void> _removeImageFromStorage() async {
-    if (_image == null) return;
+    if (_imageUrl == null) return;
 
     try {
       // Check authentication before proceeding with delete
@@ -147,10 +148,8 @@ class _ProfilePageState extends State<ProfilePage> {
       await ref.delete();
       print('Profile img deleted from storage.');
       setState(() {
-        _image = null;
+        _imageUrl = null;
       });
-
-      // Clear profile image URL in Firestore
       await _authService.saveProfileImageUrl('');
     } catch (e) {
       print('Error deleting profile img from Firebase Storage: $e');
@@ -160,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: tabs.length,
+      length: 2,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: PreferredSize(
@@ -226,7 +225,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           Navigator.pop(context);
                                         },
                                       ),
-                                      if (_image != null)
+                                      if (_imageUrl != null)
                                         ListTile(
                                           leading: const Icon(
                                             Icons.delete,
@@ -255,14 +254,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: Colors.white,
                                 width: 2.0,
                               ),
-                              image: _image != null
+                              image: _imageUrl != null
                                   ? DecorationImage(
-                                      image: FileImage(_image!),
+                                      image: NetworkImage(_imageUrl!),
                                       fit: BoxFit.cover,
                                     )
                                   : null,
                             ),
-                            child: _image == null
+                            child: _imageUrl == null
                                 ? Icon(
                                     Icons.add_a_photo,
                                     size: 40,
@@ -286,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     tabs: tabs,
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height - 350,
+                    height: 1000,
                     child: TabBarView(children: tabBarViews),
                   ),
                 ],
