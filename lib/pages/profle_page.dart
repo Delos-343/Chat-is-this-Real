@@ -1,27 +1,25 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:chat_is_this_real_app/services/profile/profile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:chat_is_this_real_app/components/tabs/feed_view.dart';
 import 'package:chat_is_this_real_app/components/tabs/starred_view.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final AuthService _authService = AuthService();
+  final ProfileService _profileService = ProfileService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String? _userEmail;
   String? _userID;
   bool _isLoading = true;
-  File? _image;
   String? _imageUrl;
 
   final List<Widget> tabs = const [
@@ -71,14 +69,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _fetchProfileImage() async {
     try {
-      final firebase_storage.Reference ref = firebase_storage
-          .FirebaseStorage.instance
-          .ref()
-          .child('profile_images')
-          .child(_userID! + '.jpg');
-      final downloadUrl = await ref.getDownloadURL();
+      String? imageUrl = await _profileService.fetchProfileImageUrl(_userID!);
       setState(() {
-        _imageUrl = downloadUrl;
+        _imageUrl = imageUrl;
       });
     } catch (e) {
       print('Error fetching profile img: $e');
@@ -89,70 +82,25 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       final pickedFile = await ImagePicker().pickImage(source: source);
       if (pickedFile != null) {
+        File imageFile = File(pickedFile.path);
+        await _profileService.uploadProfileImage(imageFile, _userID!);
         setState(() {
-          _image = File(pickedFile.path);
+          _imageUrl = pickedFile.path;
         });
-        _uploadImageToStorage();
       }
     } catch (e) {
       print('Error picking img: $e');
     }
   }
 
-  Future<void> _uploadImageToStorage() async {
-    if (_image == null) return;
-
-    try {
-      // Check authentication before proceeding with upload
-      User? user = _auth.currentUser;
-      if (user == null) {
-        print('User not authenticated.');
-        return;
-      }
-
-      final firebase_storage.Reference ref = firebase_storage
-          .FirebaseStorage.instance
-          .ref()
-          .child('profile_images')
-          .child(_userID! + '.jpg');
-
-      await ref.putFile(_image!);
-      final imageUrl = await ref.getDownloadURL();
-      setState(() {
-        _imageUrl = imageUrl;
-      });
-      await _authService.saveProfileImageUrl(imageUrl);
-      print('Uploaded img url: $imageUrl');
-    } catch (e) {
-      print('Error uploading img to Firebase Storage: $e');
-    }
-  }
-
   Future<void> _removeImageFromStorage() async {
-    if (_imageUrl == null) return;
-
     try {
-      // Check authentication before proceeding with delete
-      User? user = _auth.currentUser;
-      if (user == null) {
-        print('User is not authenticated.');
-        return;
-      }
-
-      final firebase_storage.Reference ref = firebase_storage
-          .FirebaseStorage.instance
-          .ref()
-          .child('profile_images')
-          .child(_userID! + '.jpg');
-
-      await ref.delete();
-      print('Profile img deleted from storage.');
+      await _profileService.removeProfileImage(_userID!);
       setState(() {
         _imageUrl = null;
       });
-      await _authService.saveProfileImageUrl('');
     } catch (e) {
-      print('Error deleting profile img from Firebase Storage: $e');
+      print('Error deleting profile img: $e');
     }
   }
 
