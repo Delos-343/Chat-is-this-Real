@@ -1,4 +1,9 @@
+// ignore_for_file: avoid_print
+// ignore_for_file: unused_field
+
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:chat_is_this_real_app/components/tabs/feed_view.dart';
 import 'package:chat_is_this_real_app/components/tabs/starred_view.dart';
@@ -13,8 +18,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final AuthService _authService = AuthService();
   String? _userEmail;
-  // ignore: unused_field
   String? _userID;
+  String? _profileImageUrl;
   bool _isLoading = true;
 
   final List<Widget> tabs = const [
@@ -52,16 +57,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _initializeUserDetails() async {
     try {
-      // Fetch user details from AuthService
       final user = _authService.getCurrentUser();
       if (user != null) {
+        final imageUrl = await _authService.fetchProfileImageUrl();
         setState(() {
           _userEmail = user.email;
           _userID = user.uid;
+          _profileImageUrl = imageUrl;
         });
       }
     } catch (e) {
-      // Handle error
       print('Error fetching user details: $e');
     } finally {
       setState(() {
@@ -70,10 +75,25 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _pickProfileImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final imageUrl =
+          await _authService.uploadProfileImage(File(pickedFile.path));
+      if (imageUrl != null) {
+        await _authService.saveProfileImageUrl(imageUrl);
+        setState(() {
+          _profileImageUrl = imageUrl;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Number of tabs
+      length: 2,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: PreferredSize(
@@ -94,18 +114,33 @@ class _ProfilePageState extends State<ProfilePage> {
             ? const Center(child: CircularProgressIndicator())
             : ListView(
                 children: [
-                  // Profile Img
+                  // Profile Image
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          height: 100,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.blueGrey[100],
+                        GestureDetector(
+                          onTap: _pickProfileImage,
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blueGrey[100],
+                              image: _profileImageUrl != null
+                                  ? DecorationImage(
+                                      image: NetworkImage(_profileImageUrl!),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
+                            ),
+                            child: _profileImageUrl == null
+                                ? const Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                  )
+                                : null,
                           ),
                         ),
 
