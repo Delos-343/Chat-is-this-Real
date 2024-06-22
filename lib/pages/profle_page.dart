@@ -82,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _image = File(downloadUrl);
       });
     } catch (e) {
-      print('Error fetching profile image: $e');
+      print('Error fetching profile img: $e');
     }
   }
 
@@ -93,10 +93,10 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           _image = File(pickedFile.path);
         });
-        _uploadImageToStorage(); // Ensure upload is only attempted if authenticated
+        _uploadImageToStorage();
       }
     } catch (e) {
-      print('Error picking image: $e');
+      print('Error picking img: $e');
     }
   }
 
@@ -119,9 +119,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
       await ref.putFile(_image!);
       final imageUrl = await ref.getDownloadURL();
-      print('Uploaded image url: $imageUrl');
+      print('Uploaded img url: $imageUrl');
     } catch (e) {
-      print('Error uploading image to Firebase Storage: $e');
+      print('Error uploading img to Firebase Storage: $e');
     }
   }
 
@@ -132,7 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
       // Check authentication before proceeding with delete
       User? user = _auth.currentUser;
       if (user == null) {
-        print('User not authenticated.');
+        print('User is not authenticated.');
         return;
       }
 
@@ -143,12 +143,12 @@ class _ProfilePageState extends State<ProfilePage> {
           .child(_userID! + '.jpg');
 
       await ref.delete();
-      print('Profile image deleted from storage.');
+      print('Profile img deleted from storage.');
       setState(() {
         _image = null;
       });
     } catch (e) {
-      print('Error deleting profile image from Firebase Storage: $e');
+      print('Error deleting profile img from Firebase Storage: $e');
     }
   }
 
