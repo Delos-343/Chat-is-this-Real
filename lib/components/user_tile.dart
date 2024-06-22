@@ -10,13 +10,27 @@ class UserTile extends StatelessWidget {
     required this.onTap,
   });
 
+  // Function to get the background color based on the theme
+  Color getTileColor(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return isDarkMode
+        ? Colors.grey.shade800
+        : Theme.of(context).colorScheme.secondary;
+  }
+
+  // Function to get the icon color based on the theme
+  Color getIconColor(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return isDarkMode ? Colors.amber : Colors.lightBlue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
+          color: getTileColor(context),
           borderRadius: BorderRadius.circular(12),
           boxShadow: const [
             BoxShadow(
@@ -33,13 +47,13 @@ class UserTile extends StatelessWidget {
         child: Row(
           children: [
             // Profile
-            const Icon(Icons.person_2_outlined),
+            Icon(Icons.person_2_outlined, color: getIconColor(context)),
 
             const SizedBox(
               width: 10,
             ),
 
-            // Username
+            // Username (unchanged text style)
             Text(text),
           ],
         ),

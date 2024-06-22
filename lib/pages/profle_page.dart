@@ -1,10 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:chat_is_this_real_app/services/profile/profile_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'package:chat_is_this_real_app/components/tabs/feed_view.dart';
 import 'package:chat_is_this_real_app/components/tabs/starred_view.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:chat_is_this_real_app/themes/theme_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -21,26 +23,6 @@ class _ProfilePageState extends State<ProfilePage> {
   String? _userID;
   bool _isLoading = true;
   String? _imageUrl;
-
-  final List<Widget> tabs = const [
-    Tab(
-      icon: Icon(
-        Icons.image_outlined,
-        color: Colors.blueGrey,
-      ),
-    ),
-    Tab(
-      icon: Icon(
-        Icons.star_half,
-        color: Colors.blueGrey,
-      ),
-    ),
-  ];
-
-  final List<Widget> tabBarViews = const [
-    FeedView(),
-    StarredView(),
-  ];
 
   @override
   void initState() {
@@ -84,8 +66,8 @@ class _ProfilePageState extends State<ProfilePage> {
       if (pickedFile != null) {
         File imageFile = File(pickedFile.path);
         await _profileService.uploadProfileImage(imageFile, _userID!);
-        setState(() {
-          _imageUrl = pickedFile.path;
+        setState(() async {
+          _imageUrl = await _profileService.fetchProfileImageUrl(_userID!);
         });
       }
     } catch (e) {
@@ -106,6 +88,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+    Color tabIconColor = isDarkMode ? Colors.amber : Colors.lightBlue;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -116,9 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
             centerTitle: true,
             title: Text(
               _userEmail ?? 'Profile',
-              style: const TextStyle(
-                fontSize: 15,
-              ),
+              style: const TextStyle(fontSize: 15),
             ),
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.grey.shade700,
@@ -230,11 +213,29 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   TabBar(
-                    tabs: tabs,
+                    tabs: [
+                      Tab(
+                        icon: Icon(
+                          Icons.image_outlined,
+                          color: tabIconColor,
+                        ),
+                      ),
+                      Tab(
+                        icon: Icon(
+                          Icons.video_collection_outlined,
+                          color: tabIconColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 1000,
-                    child: TabBarView(children: tabBarViews),
+                    child: TabBarView(
+                      children: [
+                        FeedView(),
+                        StarredView(),
+                      ],
+                    ),
                   ),
                 ],
               ),
