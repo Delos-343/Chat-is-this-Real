@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,10 +8,10 @@ import 'package:chat_is_this_real_app/components/tabs/feed_view.dart';
 import 'package:chat_is_this_real_app/components/tabs/starred_view.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -22,8 +20,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String? _userEmail;
   String? _userID;
+  File? _image; // This will hold the profile image file
+
   bool _isLoading = true;
-  File? _image;
 
   final List<Widget> tabs = const [
     Tab(
@@ -104,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_image == null) return;
 
     try {
-      // Check authentication before proceeding with upload
+      // Check auth before proceeding with upload
       User? user = _auth.currentUser;
       if (user == null) {
         print('User not authenticated.');
@@ -120,6 +119,9 @@ class _ProfilePageState extends State<ProfilePage> {
       await ref.putFile(_image!);
       final imageUrl = await ref.getDownloadURL();
       print('Uploaded img url: $imageUrl');
+
+      // Update profile image URL in Firestore
+      await _authService.saveProfileImageUrl(imageUrl);
     } catch (e) {
       print('Error uploading img to Firebase Storage: $e');
     }
@@ -129,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_image == null) return;
 
     try {
-      // Check authentication before proceeding with delete
+      // Check auth before proceeding with delete
       User? user = _auth.currentUser;
       if (user == null) {
         print('User is not authenticated.');
@@ -147,6 +149,9 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         _image = null;
       });
+
+      // Clear profile image URL in Firestore
+      await _authService.saveProfileImageUrl('');
     } catch (e) {
       print('Error deleting profile img from Firebase Storage: $e');
     }
@@ -155,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: tabs.length,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: PreferredSize(
@@ -281,7 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     tabs: tabs,
                   ),
                   SizedBox(
-                    height: 1000,
+                    height: MediaQuery.of(context).size.height - 350,
                     child: TabBarView(children: tabBarViews),
                   ),
                 ],
