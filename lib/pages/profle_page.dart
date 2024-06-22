@@ -17,18 +17,10 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     ),
 
-    // Reels
+    // Starred
     Tab(
       icon: Icon(
         Icons.video_collection,
-        color: Colors.blueGrey,
-      ),
-    ),
-
-    // Tagged
-    Tab(
-      icon: Icon(
-        Icons.bookmark,
         color: Colors.blueGrey,
       ),
     ),
@@ -40,10 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
     FeedView(),
 
     // Reels View
-    ReelsView(),
-
-    // Tagged View
-    TaggedView(),
+    StarredView(),
   ];
 
   @override
