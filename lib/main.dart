@@ -8,6 +8,11 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseAppCheck.instance.activate(
+    webRecaptchaSiteKey: 'YOUR_RECAPTCHA_SITE_KEY',
+    androidPackageName: 'com.example.chat_is_this_real_app',
+    androidSafetyNetApiKey: 'YOUR_SAFETYNET_API_KEY',
+  );
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),

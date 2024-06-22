@@ -1,7 +1,10 @@
+// ignore_for_file: unused_field
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_is_this_real_app/services/auth/auth_service.dart';
 import 'package:chat_is_this_real_app/components/tabs/feed_view.dart';
 import 'package:chat_is_this_real_app/components/tabs/starred_view.dart';
@@ -15,6 +18,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final AuthService _authService = AuthService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   String? _userEmail;
   String? _userID;
   bool _isLoading = true;
@@ -48,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _initializeUserDetails() async {
     try {
-      final user = _authService.getCurrentUser();
+      User? user = _auth.currentUser;
       if (user != null) {
         setState(() {
           _userEmail = user.email;
@@ -88,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           _image = File(pickedFile.path);
         });
-        await _uploadImageToStorage();
+        _uploadImageToStorage(); // Ensure upload is only attempted if authenticated
       }
     } catch (e) {
       print('Error picking image: $e');
@@ -99,11 +104,19 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_image == null) return;
 
     try {
+      // Check authentication before proceeding with upload
+      User? user = _auth.currentUser;
+      if (user == null) {
+        print('User not authenticated.');
+        return;
+      }
+
       final firebase_storage.Reference ref = firebase_storage
           .FirebaseStorage.instance
           .ref()
           .child('profile_images')
           .child(_userID! + '.jpg');
+
       await ref.putFile(_image!);
       final imageUrl = await ref.getDownloadURL();
       print('Uploaded image url: $imageUrl');
@@ -116,11 +129,19 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_image == null) return;
 
     try {
+      // Check authentication before proceeding with delete
+      User? user = _auth.currentUser;
+      if (user == null) {
+        print('User not authenticated.');
+        return;
+      }
+
       final firebase_storage.Reference ref = firebase_storage
           .FirebaseStorage.instance
           .ref()
           .child('profile_images')
           .child(_userID! + '.jpg');
+
       await ref.delete();
       print('Profile image deleted from storage.');
       setState(() {
@@ -169,44 +190,45 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: Wrap(
                                     children: <Widget>[
                                       ListTile(
-                                        leading: Icon(
+                                        leading: const Icon(
                                           Icons.photo_library,
                                           color: Colors.green,
                                         ),
-                                        title: Text('Gallery'),
+                                        title: const Text('Gallery'),
                                         onTap: () {
                                           _getImage(ImageSource.gallery);
                                           Navigator.pop(context);
                                         },
                                       ),
                                       ListTile(
-                                        leading: Icon(
+                                        leading: const Icon(
                                           Icons.camera_alt,
                                           color: Colors.lightBlue,
                                         ),
-                                        title: Text('Camera'),
+                                        title: const Text('Camera'),
                                         onTap: () {
                                           _getImage(ImageSource.camera);
                                           Navigator.pop(context);
                                         },
                                       ),
                                       ListTile(
-                                        leading: Icon(
+                                        leading: const Icon(
                                           Icons.cancel,
                                           color: Colors.red,
                                         ),
-                                        title: Text('Cancel'),
+                                        title: const Text('Cancel'),
                                         onTap: () {
                                           Navigator.pop(context);
                                         },
                                       ),
                                       if (_image != null)
                                         ListTile(
-                                          leading: Icon(
+                                          leading: const Icon(
                                             Icons.delete,
                                             color: Colors.grey,
                                           ),
-                                          title: Text('Remove Profile Picture'),
+                                          title: const Text(
+                                              'Remove Profile Picture'),
                                           onTap: () {
                                             _removeImageFromStorage();
                                             Navigator.pop(context);
