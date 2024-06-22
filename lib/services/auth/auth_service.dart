@@ -28,7 +28,7 @@ class AuthService {
     }
   }
 
-  // Save profile img URL to Firestore
+  // Save profile image URL to Firestore
   Future<void> saveProfileImageUrl(String url) async {
     final user = _auth.currentUser;
     if (user != null) {
@@ -38,7 +38,7 @@ class AuthService {
     }
   }
 
-  // Fetch profile img URL from Firestore
+  // Fetch profile image URL from Firestore
   Future<String?> fetchProfileImageUrl() async {
     final user = _auth.currentUser;
     if (user != null) {
