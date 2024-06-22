@@ -103,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_image == null) return;
 
     try {
-      // Check auth before proceeding with upload
+      // Check authentication before proceeding with upload
       User? user = _auth.currentUser;
       if (user == null) {
         print('User not authenticated.');
@@ -131,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (_image == null) return;
 
     try {
-      // Check auth before proceeding with delete
+      // Check authentication before proceeding with delete
       User? user = _auth.currentUser;
       if (user == null) {
         print('User is not authenticated.');
