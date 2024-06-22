@@ -8,7 +8,7 @@ import 'package:chat_is_this_real_app/components/tabs/feed_view.dart';
 import 'package:chat_is_this_real_app/components/tabs/starred_view.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
