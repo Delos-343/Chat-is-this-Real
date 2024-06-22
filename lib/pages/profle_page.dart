@@ -13,6 +13,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final AuthService _authService = AuthService();
   String? _userEmail;
+  // ignore: unused_field
   String? _userID;
   bool _isLoading = true;
 
