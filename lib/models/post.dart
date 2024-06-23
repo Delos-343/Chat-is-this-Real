@@ -1,21 +1,17 @@
-// ignore_for_file: unused_import
-
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:image_picker/image_picker.dart';
 
-class PostService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class Post {
   final firebase_storage.FirebaseStorage _storage =
       firebase_storage.FirebaseStorage.instance;
 
   Future<void> addPost(File imageFile) async {
     try {
-      final User? user = _auth.currentUser;
+      final User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        throw Exception('User not authenticated.');
+        print('User not authenticated.');
+        return;
       }
       final ref = _storage
           .ref()
@@ -23,35 +19,29 @@ class PostService {
           .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
       await ref.putFile(imageFile);
     } catch (e) {
-      print('Error adding post: $e');
-      rethrow; // Rethrow the exception to handle it in the calling context
+      print('Error adding image: $e');
+      rethrow; // Throw the error again to handle in UI if needed
     }
   }
 
-  Future<void> editPost(String imageUrl, File newImageFile) async {
+  Future<void> editPost(String currentImageUrl, File newImageFile) async {
     try {
-      final firebase_storage.Reference ref = _storage.refFromURL(imageUrl);
-      await ref.delete(); // Delete current img
-
-      // Upload new img
-      final newRef = _storage
-          .ref()
-          .child('images')
-          .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
-      await newRef.putFile(newImageFile);
+      await deletePost(currentImageUrl); // Delete current image
+      await addPost(newImageFile); // Add new image
     } catch (e) {
-      print('Error editing post: $e');
-      rethrow; // Rethrow the exception to handle it in the calling context
+      print('Error editing image: $e');
+      rethrow; // Throw the error again to handle in UI if needed
     }
   }
 
   Future<void> deletePost(String imageUrl) async {
     try {
-      final firebase_storage.Reference ref = _storage.refFromURL(imageUrl);
-      await ref.delete(); // Delete img from Firebase Storage
+      final firebase_storage.Reference ref =
+          firebase_storage.FirebaseStorage.instance.refFromURL(imageUrl);
+      await ref.delete();
     } catch (e) {
-      print('Error deleting post: $e');
-      rethrow; // Rethrow the exception to handle it in the calling context
+      print('Error deleting image: $e');
+      rethrow; // Throw the error again to handle in UI if needed
     }
   }
 }
