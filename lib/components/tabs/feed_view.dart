@@ -17,10 +17,12 @@ class FeedView extends StatelessWidget {
           padding: const EdgeInsets.all(2.0),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: Image.asset('lib/img/image${index + 1}.jpg'),
+            child: Image.asset('lib/assets/img/image${index + 1}.jpg'),
           ),
         ),
       ),
     );
   }
 }
+
+// C:\Users\moham\Desktop\FLAP\chat_is_this_real_app\lib\assets\img\image1.jpg
