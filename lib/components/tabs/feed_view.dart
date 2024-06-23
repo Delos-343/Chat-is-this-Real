@@ -33,7 +33,7 @@ class _FeedViewState extends State<FeedView> {
       final List<String> imageUrls = [];
 
       // Fetch img from Firebase Storage based on existing entries
-      for (int i = 1; i <= 6; i++) {
+      for (int i = 1; i <= 0; i++) {
         final String imageUrl = await _getImageUrl(i);
         if (imageUrl.isNotEmpty) {
           imageUrls.add(imageUrl);
