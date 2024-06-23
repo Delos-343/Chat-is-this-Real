@@ -12,15 +12,14 @@ class FeedView extends StatelessWidget {
         itemCount: 6,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2),
-        itemBuilder: (context, index) =>
-          Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Image.asset('lib/img/image${index + 1}.jpg'),
-            ),
+            crossAxisCount: 2),
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: Image.asset('lib/img/image${index + 1}.jpg'),
           ),
+        ),
       ),
     );
   }
